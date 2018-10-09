@@ -1,0 +1,104 @@
+heat_template_version: 2016-04-08
+
+description: >
+  Node template to create a server.
+
+parameters:
+  index:
+    type: number
+    description: Number of the server
+  names:
+    type: comma_delimited_list
+    description: Names of the server
+  stack_name:
+    type: string
+    description: Name of the stack
+  key:
+    type: string
+    description: Name of keypair to assign to server
+  secgroups:
+    type: comma_delimited_list
+    description: List of security group to assign to server
+  image:
+    type: string
+    description: Name of image to use for servers
+  flavor:
+    type: string
+    description: Flavor to use for server
+  availability_zone:
+    type: string
+    description: Availability zone for server
+    default: nova
+  private_network:
+    type: string
+    label: Private network name or ID
+    description: Network to attach instance to.
+  public_network:
+    type: string
+    label: Public network name or ID
+    description: Network to attach instance to.
+  dns_zone:
+    type: string
+    description: DNS zone for server
+  volumes:
+    type: json
+  volumes_count:
+    type: number
+#    description: Volumes for server
+#    default: "params: {size: 2}"
+
+
+resources:
+
+  floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: { get_param: public_network }
+  association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: floating_ip }
+      server_id: { get_resource: instance }
+
+  instancerecord:
+    type: OS::Designate::Record
+    properties:
+      name: { list_join: ['.', [{ get_attr: [instance, name] }, { get_param: dns_zone }]] }
+      data: { get_attr: [instance, first_address] }
+      description: { get_attr: [instance, name] }
+      domain: { get_param: dns_zone }
+      type: "A"
+
+
+  group_of_volumes:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: { get_param: volumes_count }
+      resource_def:
+        type: heat-volume.yaml
+        properties:
+          instance_id: { get_resource: instance }
+          instance_name: { get_attr: [instance, name]  }
+          volume_params: { get_param: volumes }
+          index: '%index%'
+
+  instance:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: [ names , get_param: index ] }
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+    #      availability_zone: { get_param: availability_zone }
+      key_name: { get_param: key }
+      name:
+        str_replace:
+          template: ${STACK}-${NAME}
+          params:
+            ${STACK}: { get_param: stack_name }
+            ${NAME}: { get_param: [ names , get_param: index ] }
+      
+      networks:
+        - network: { get_param: private_network }
+      metadata:
+        psa_reflex_name: noreflex
+

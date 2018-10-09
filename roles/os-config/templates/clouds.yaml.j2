@@ -1,0 +1,29 @@
+# {{ ansible_managed }}
+clouds:
+  devstack:
+    auth:
+      auth_url: '{{ lagoon_configuration_params.openstack.auth_url }}'
+      username: {{ lagoon_configuration_params.openstack.username }}
+      password: {{ lagoon_configuration_params.openstack.password }}
+{% if lagoon_configuration_params.openstack.project_name is defined %}
+      project_name: {{ lagoon_configuration_params.openstack.project_name }}
+{% endif %}
+{% if lagoon_configuration_params.openstack.tenant_name is defined %}
+      tenant_name: {{ lagoon_configuration_params.openstack.tenant_name }}
+{% endif %}
+{% if lagoon_configuration_params.openstack.user_domain_name is defined %}
+      user_domain_name: {{ lagoon_configuration_params.openstack.user_domain_name }}
+{% endif %}
+{% if lagoon_configuration_params.openstack.project_domain_name is defined %}
+      project_domain_name: {{ lagoon_configuration_params.openstack.project_domain_name }}
+{% endif %}
+{% if lagoon_configuration_params.openstack.cacert is defined %}
+    cacert: /etc/ssl/certs/ca-certificates.crt
+{% endif %}
+{% if lagoon_configuration_params.openstack.region_name is defined %}
+    region_name: {{ lagoon_configuration_params.openstack.region_name }}
+{% endif %}
+{% if lagoon_configuration_params.openstack.insecure | default('False')| bool %}
+    verify: false
+    insecure: true
+{% endif %}

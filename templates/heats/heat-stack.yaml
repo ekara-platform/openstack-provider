@@ -13,9 +13,6 @@ parameters:
   key:
     type: string
     description: Name of keypair to assign to server
-  secgroups:
-    type: comma_delimited_list
-    description: List of security group to assign to server
   image:
     type: string
     description: Name of image to use for servers
@@ -40,12 +37,9 @@ parameters:
   volumes:
     type: json
     description: Volumes for server
-#    default: '[{"params": {"size": 2}},{"params": {"size": 3}}]'
-#    default: '[{"params": {"volume_size": 2}},{"params": {"volume_size": 3}}]'
   volumes_count:
     type: number
     description: Number of volumes
-#    default: 2
 
 resources:
   servers:
@@ -62,7 +56,6 @@ resources:
           flavor: { get_param: flavor }
           private_network: { get_param: private_network }
           public_network: { get_param: public_network }
-          secgroups: { get_param: secgroups }
           names: { get_param: names }
           index: '%index%'
           dns_zone: { get_param: dns_zone }

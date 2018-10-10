@@ -35,17 +35,18 @@
 #
     - name: Provision a set of instances
       include_tasks: tasks/instances.yml
-#
-#    - name: Provision volumes
-#      include_tasks: tasks/volumes.yml
-#      when: lagoon_configuration_params.volumes is defined
 
-#    - name: Push outputs to engine
-#      template:
-#        src: "templates/output/{{item}}"
-#        dest: "{{output_dir}}/{{item}}"
-#      with_items:
-#      - params.yaml
+    - name: Provision volumes
+      include_tasks: tasks/volumes.yml
+      when: lagoon_configuration_params.volumes is defined
+
+    - name: Push outputs to engine
+      template:
+        src: "templates/output/{{item}}"
+        dest: "{{output_dir}}/{{item}}"
+      with_items:
+      - params.yaml
+      when: lagoon_configuration_params.volumes is defined
     always:
     - name: Purge temp dir
       file:

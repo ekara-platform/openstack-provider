@@ -1,0 +1,2 @@
+volumes:
+  {{lagoon_volumes | to_nice_yaml | indent(2,false)}}

@@ -32,14 +32,6 @@
       - provider
       - machine_private_key
       - machine_public_key
-  - include_role:
-      name: os-config
-  - name: Return params for Openstack
-    template:
-      src: "templates/output/{{item}}"
-      dest: "{{output_dir}}/{{item}}"
-    with_items:
-    - inventory.yaml
 
   - block:
     - name: Install Certificates
@@ -54,8 +46,35 @@
       become: True
       shell:
         /usr/sbin/update-ca-certificates
+    - name: Update certificates
+      set_fact:
+        lagoon_os_cert: 
+          cacert: /etc/ssl/certs/ca-certificates.crt
+    - name: Update config
+      set_fact:
+        lagoon_config_cert: "{{lagoon_configuration_params.openstack.config | combine(lagoon_os_cert, recursive=True)}}"
     when:
     - lagoon_configuration_params.openstack.cacert is defined
+
+  # Bug in openstack python
+  - set_fact:
+      lagoon_config_os: {}   
+  - set_fact:
+      lagoon_config_os: "{{lagoon_config_os |combine({item.key: item.value})}}"
+    when: 
+    - item.key not in ['identity_api_version']
+    with_dict: "{{lagoon_config_cert}}"
+    
+  - include_role:
+      name: os-config
+
+  - name: Return params for Openstack
+    template:
+      src: "templates/output/{{item}}"
+      dest: "{{output_dir}}/{{item}}"
+    with_items:
+    - inventory.yaml
+
 
   - name: Test Openstack configuration
     os_project_facts:

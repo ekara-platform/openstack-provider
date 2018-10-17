@@ -51,7 +51,6 @@ resources:
         properties:
           stack_name: { get_param: "OS::stack_name" }
           key: { get_param: key }
-#          parent_stack_id: { get_param: "OS::stack_id" }
           image: { get_param: image }
           flavor: { get_param: flavor }
           private_network: { get_param: private_network }
@@ -61,3 +60,11 @@ resources:
           dns_zone: { get_param: dns_zone }
           volumes: { get_param: volumes }
           volumes_count: { get_param: volumes_count }
+
+outputs:
+  server_ids:
+    value: {get_attr: [servers, server_id]}
+  volumes_to_mount:
+    value: {get_attr: [servers, volumes_to_mount]}
+  volumes_name:
+    value: {get_attr: [servers, volumes_name]}

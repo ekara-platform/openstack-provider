@@ -6,5 +6,5 @@
     state: directory
 - name: Deploy Openstack configuration
   template:
-    src: templates/clouds.yaml.j2
+    src: templates/clouds.yaml
     dest: ~/.config/openstack/clouds.yaml

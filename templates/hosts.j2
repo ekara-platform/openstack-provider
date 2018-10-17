@@ -6,7 +6,7 @@
 meta-Swarm_type_{{lagoon_configuration_params.environment.name | replace('-','_')}}_manager
 
 [workers:children]
-{% if lagoon_workers.instances | length > 0 %}
+{% if lagoon_workers | length > 0 %}
 meta-Swarm_type_{{lagoon_configuration_params.environment.name | replace('-','_')}}_worker
 {% endif %}
 

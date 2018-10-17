@@ -1,7 +1,7 @@
 - name: Set Stack name
   set_fact:
     lagoon_stack_meta:
-      stack_name: "{{lagoon_stack_name}}"
+      Stack_name: "{{lagoon_stack_name}}"
 - name: Add metadata
   set_fact: 
     lagoon_os_metadata: "{{ lagoon_configuration_params.params.metadata | default({})| combine(lagoon_stack_meta) }}"
@@ -34,4 +34,23 @@
       dns_zone: "{{lagoon_configuration_params.params.dns_zone | default('')}}"
       volumes: "{{lagoon_configuration_params.volumes | default({}) | to_json }}"
       volumes_count: "{{lagoon_configuration_params.volumes | default({}) | length }}"
-#- debug: var=lagoon_os_stack.stack.outputs
+
+- block:
+  - name: Estimate Swarm managers count
+    set_fact:
+      lagoon_managers: >
+        {% set ns = namespace(managers=1) %}{% for x in range(1,([9,lagoon_configuration_params.instances+1]|min)) %}
+        {%if x % 2 == 1%}{% set ns.managers = x %}{%endif%}{%endfor%}{{ns.managers}}
+
+  - name: Add swarm tag on instance
+    os_server_metadata:
+        state: present
+        name: "{{item}}"
+        meta:
+            Swarm_type: "{{lagoon_configuration_params.environment.name}}_{{swarm_type}}"
+    vars:
+      swarm_type: "{% if index_manager < lagoon_managers %}manager{%else%}worker{%endif%}"
+    loop: "{{ lagoon_os_stack.stack.outputs[0].output_value }}"
+    loop_control:
+      index_var: index_manager
+      label: "{{item}} - {{swarm_type}}"

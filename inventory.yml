@@ -27,8 +27,8 @@
       lagoon_instances: "{{ lagoon_instances + [ item ] }}"
     with_items: "{{openstack_servers}}"
     when: 
-    - item.metadata.stack_name is defined
-    - item.metadata.stack_name == lagoon_configuration_params.environment.name
+    - item.metadata.Stack_name is defined
+    - item.metadata.Stack_name == lagoon_configuration_params.environment.name
     loop_control:
       label: "{{ item.name }}"
   - name: Gather Worker hosts
@@ -36,8 +36,8 @@
       lagoon_workers: "{{ lagoon_workers + [ item ] }}"
     with_items: "{{lagoon_instances}}"
     when: 
-    - item.metadata.swarm_type is defined
-    - item.metadata.swarm_type == 'worker'
+    - item.metadata.Swarm_type is defined
+    - item.metadata.Swarm_type == 'worker'
     loop_control:
       label: "{{ item.name }}"
 

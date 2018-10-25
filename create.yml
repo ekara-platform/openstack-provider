@@ -26,14 +26,6 @@
         name: "{{lagoon_keypair_name}}"
         public_key: "{{ lookup('file', lagoon_configuration_params.connectionConfig.machine_public_key) }}"
 
-#    - name: Provision a set of security groups
-#      include_tasks: tasks/security-group.yml
-#      when: lagoon_configuration_params.params.security_groups is defined
-#
-#    - name: Provision a placement group
-#      include_tasks: tasks/placement-group.yml
-#      when: lagoon_configuration_params.params.placement_group is defined
-#
     - name: Provision a set of instances
       include_tasks: tasks/instances.yml
 

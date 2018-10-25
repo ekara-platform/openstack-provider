@@ -1,9 +1,10 @@
+---
 - name: Set Stack name
   set_fact:
     lagoon_stack_meta:
       Stack_name: "{{lagoon_stack_name}}"
 - name: Add metadata
-  set_fact: 
+  set_fact:
     lagoon_os_metadata: "{{ lagoon_configuration_params.params.metadata | default({})| combine(lagoon_stack_meta) }}"
 
 - name: Generate template to create instances
@@ -30,7 +31,6 @@
       private_network: "{{ lagoon_configuration_params.params.private_network }}"
       public_network: "{{ lagoon_configuration_params.params.public_network | default('')}}"
       availability_zone: "{{ lagoon_configuration_params.params.availability_zone | default('') }}"
-#      secgroups: "{{lagoon_configuration_params.params.security_groups}}"
       dns_zone: "{{lagoon_configuration_params.params.dns_zone | default('')}}"
       volumes: "{{lagoon_configuration_params.volumes | default({}) | to_json }}"
       volumes_count: "{{lagoon_configuration_params.volumes | default({}) | length }}"
@@ -44,10 +44,10 @@
 
   - name: Add swarm tag on instance
     os_server_metadata:
-        state: present
-        name: "{{item}}"
-        meta:
-            Swarm_type: "{{lagoon_configuration_params.environment.name}}_{{swarm_type}}"
+      state: present
+      name: "{{item}}"
+      meta:
+        Swarm_type: "{{lagoon_configuration_params.environment.name}}_{{swarm_type}}"
     vars:
       swarm_type: "{% if index_manager < lagoon_managers %}manager{%else%}worker{%endif%}"
     loop: "{{ lagoon_os_stack.stack.outputs[0].output_value }}"

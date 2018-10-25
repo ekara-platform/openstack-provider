@@ -35,7 +35,7 @@
 
   - block:
     - name: Install Certificates
-      become: True
+      become: true
       get_url:
         url: "{{item}}"
         dest: "/usr/local/share/ca-certificates/{{item|basename}}"
@@ -43,12 +43,12 @@
       with_items:
       - "{{lagoon_configuration_params.openstack.cacert}}"
     - name: Update Certificates
-      become: True
+      become: true
       shell:
         /usr/sbin/update-ca-certificates
     - name: Update certificates
       set_fact:
-        lagoon_os_cert: 
+        lagoon_os_cert:
           cacert: /etc/ssl/certs/ca-certificates.crt
     - name: Update config
       set_fact:
@@ -58,13 +58,13 @@
 
   # Bug in openstack python
   - set_fact:
-      lagoon_config_os: {}   
+      lagoon_config_os: {}
   - set_fact:
       lagoon_config_os: "{{lagoon_config_os |combine({item.key: item.value})}}"
-    when: 
+    when:
     - item.key not in ['identity_api_version']
     with_dict: "{{lagoon_config_cert}}"
-    
+
   - include_role:
       name: os-config
 

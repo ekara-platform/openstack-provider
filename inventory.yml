@@ -7,16 +7,13 @@
     include_role:
       name: lagoon.configuration
   tasks:
-#  - name: Refresh Inventory
-#    shell: "{{lagoon_configuration_params.component_path.openstack}}/inventory/modules/openstack_inventory.py --list --refresh"
-#    changed_when: false
   - meta: refresh_inventory
 
   - name: Create inventory folder
     file:
       state: directory
       path: "{{lagoon_inventory_path}}"
-      
+
   - name: Gather instances
     os_server_facts:
   - set_fact:
@@ -26,7 +23,7 @@
     set_fact:
       lagoon_instances: "{{ lagoon_instances + [ item ] }}"
     with_items: "{{openstack_servers}}"
-    when: 
+    when:
     - item.metadata.Stack_name is defined
     - item.metadata.Stack_name == lagoon_configuration_params.environment.name
     loop_control:
@@ -35,7 +32,7 @@
     set_fact:
       lagoon_workers: "{{ lagoon_workers + [ item ] }}"
     with_items: "{{lagoon_instances}}"
-    when: 
+    when:
     - item.metadata.Swarm_type is defined
     - item.metadata.Swarm_type == 'worker'
     loop_control:
@@ -81,4 +78,3 @@
     - "{{ lagoon_instances }}"
     loop_control:
       label: "{{ item.name }}"
-      

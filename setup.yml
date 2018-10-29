@@ -41,7 +41,7 @@
         dest: "/usr/local/share/ca-certificates/{{item|basename}}"
         mode: 0640
       with_items:
-      - "{{ekara_configuration_params.openstack.cacert}}"
+      - "{{ekara_configuration_params.params.cacert}}"
     - name: Update Certificates
       become: true
       shell:
@@ -52,9 +52,9 @@
           cacert: /etc/ssl/certs/ca-certificates.crt
     - name: Update config
       set_fact:
-        ekara_config_cert: "{{ekara_configuration_params.openstack.config | combine(ekara_os_cert, recursive=True)}}"
+        ekara_config_cert: "{{ekara_configuration_params.params.config | combine(ekara_os_cert, recursive=True)}}"
     when:
-    - ekara_configuration_params.openstack.cacert is defined
+    - ekara_configuration_params.params.cacert is defined
 
   # Bug in openstack python
   - set_fact:
@@ -76,5 +76,5 @@
     - inventory.yaml
 
 
-  - name: Test Openstack configuration
-    os_project_facts:
+#  - name: Test Openstack configuration
+#    os_project_facts:

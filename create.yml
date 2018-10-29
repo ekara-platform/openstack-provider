@@ -7,8 +7,8 @@
     include_role:
       name: ekara.configuration
   - name: Execute custom pre-tasks
-    include_tasks: "{{input_dir}}/{{ekara_configuration_params.pre_tasks}}"
-    when: ekara_configuration_params.pre_tasks is defined
+    include_tasks: "{{input_dir}}/{{ekara_configuration_params.params.pre_tasks}}"
+    when: ekara_configuration_params.params.pre_tasks is defined
   tasks:
   - set_fact:
       ekara_keypair_name: "{{ekara_configuration_params.environment.name}}_{{ekara_configuration_params.environment.uid}}"

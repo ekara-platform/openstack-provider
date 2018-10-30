@@ -12,7 +12,7 @@
   tasks:
   - set_fact:
       ekara_keypair_name: "{{ekara_configuration_params.environment.name}}_{{ekara_configuration_params.environment.uid}}"
-      ekara_temp_dir: "tmp-{{lookup('pipe','date') | to_uuid}}"
+      ekara_temp_dir: "{{input_dir}}/tmp-{{lookup('pipe','date') | to_uuid}}"
       ekara_stack_name: "{{ekara_configuration_params.environment.name}}"
 
   - name: Create Infrastructure

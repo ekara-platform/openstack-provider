@@ -24,8 +24,8 @@
       ekara_instances: "{{ ekara_instances + [ item ] }}"
     with_items: "{{openstack_servers}}"
     when:
-    - item.metadata.Stack_name is defined
-    - item.metadata.Stack_name == ekara_configuration_params.environment.name
+    - item.metadata.Stack_id is defined
+    - item.metadata.Stack_id == ekara_configuration_params.environment.uid
     loop_control:
       label: "{{ item.name }}"
   - name: Gather Worker hosts

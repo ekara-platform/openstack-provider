@@ -139,8 +139,10 @@ resources:
 
 outputs:
   server_id:
+    value: {get_resource: instance}
+  server_name:
     value: {get_attr: [instance, name]}
-  volumes_to_mount:
+  volumes_id:
     value: {get_attr: [group_of_volumes, volume_id]}
   volumes_name:
     value: {get_attr: [group_of_volumes, volume_name]}

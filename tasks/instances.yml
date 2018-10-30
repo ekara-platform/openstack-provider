@@ -3,6 +3,7 @@
   set_fact:
     ekara_stack_meta:
       Stack_name: "{{ekara_stack_name}}"
+      Stack_id: "{{ekara_configuration_params.environment.uid}}"
 - name: Add metadata
   set_fact:
     ekara_os_metadata: "{{ ekara_configuration_params.params.metadata | default({})| combine(ekara_stack_meta) }}"
@@ -41,7 +42,6 @@
       ekara_managers: >
         {% set ns = namespace(managers=1) %}{% for x in range(1,([9,ekara_configuration_params.instances+1]|min)) %}
         {%if x % 2 == 1%}{% set ns.managers = x %}{%endif%}{%endfor%}{{ns.managers}}
-
   - name: Add swarm tag on instance
     os_server_metadata:
       state: present

@@ -64,7 +64,9 @@ resources:
 outputs:
   server_ids:
     value: {get_attr: [servers, server_id]}
-  volumes_to_mount:
-    value: {get_attr: [servers, volumes_to_mount]}
-  volumes_name:
+  server_names:
+    value: {get_attr: [servers, server_name]}
+  volumes_ids:
+    value: {get_attr: [servers, volumes_id]}
+  volumes_names:
     value: {get_attr: [servers, volumes_name]}

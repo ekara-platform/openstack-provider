@@ -41,11 +41,11 @@
       - params.yaml
       when: ekara_configuration_params.volumes is defined
 
-    always:
-    - name: Purge temp dir
-      file:
-        path: "{{ekara_temp_dir}}"
-        state: absent
+#    always:
+#    - name: Purge temp dir
+#      file:
+#        path: "{{ekara_temp_dir}}"
+#        state: absent
 
 - name: Create Inventory
   import_playbook: inventory.yml

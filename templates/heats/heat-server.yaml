@@ -126,10 +126,10 @@ resources:
 # {% else %} DEfine default name
       name:
         str_replace:
-          template: ${STACK}-${INDEX}
+          template: ${PREFIX}-${INDEX}
           params:
             ${INDEX}: { get_param: index }
-            ${STACK}: { get_param: stack_name }
+            ${PREFIX}: {{ekara_prefix_names}}
 # {% endif %}
 # {% if ekara_configuration_params.params.security_groups is defined %} Define security groups
       security_groups: 

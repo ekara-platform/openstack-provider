@@ -9,18 +9,12 @@
   - name: Execute custom pre-tasks
     include_tasks: "{{input_dir}}/{{ekara_configuration_params.params.pre_tasks}}"
     when: ekara_configuration_params.params.pre_tasks is defined
-  - name: Looking for new machines names
-    set_fact:
-      ekara_os_machine_names:
-      - noreflex-0
-      - noreflex-1
-      - noreflex-2
-  - debug: msg="{{ekara_os_machine_names}}"
   tasks:
   - set_fact:
       ekara_keypair_name: "{{ekara_configuration_params.environment.name}}_{{ekara_configuration_params.environment.uid}}"
-      ekara_temp_dir: "{{input_dir}}/tmp-{{lookup('pipe','date') | to_uuid}}"
+      ekara_temp_dir: "tmp-{{lookup('pipe','date') | to_uuid}}"
       ekara_stack_name: "{{ekara_configuration_params.environment.name}}"
+      ekara_stack_full_name: "{{ekara_configuration_params.environment.name}}_{{ekara_configuration_params.environment.uid}}"
 
   - name: Create Infrastructure
     block:

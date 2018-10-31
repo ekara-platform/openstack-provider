@@ -8,6 +8,12 @@
   set_fact:
     ekara_os_metadata: "{{ ekara_configuration_params.params.metadata | default({})| combine(ekara_stack_meta) }}"
 
+- name: Define default machines names
+  set_fact:
+    ekara_prefix_names: "{{ekara_configuration_params.params.prefix_names | default(ekara_stack_full_name)}}"
+  when:
+  - ekara_os_machine_names is not defined
+
 - name: Generate template to create instances
   template:
     src: "templates/heats/{{item}}"
@@ -20,18 +26,17 @@
 - name: Create stack
   register: ekara_os_stack
   os_stack:
-    name: "{{ekara_configuration_params.environment.name}}_{{ekara_configuration_params.environment.uid}}"
+    name: "{{ekara_stack_full_name}}"
     state: present
     template: "{{ekara_temp_dir}}/heat-stack.yaml"
     parameters:
-      names: "{{ekara_os_machine_names | default({})}}"
+      names: "{{ekara_os_machine_names | default([])}}"
       node_count: "{{ekara_configuration_params.instances}}"
       key: "{{ ekara_keypair_name }}"
       image: "{{ ekara_configuration_params.params.image }}"
       flavor: "{{ ekara_configuration_params.params.flavor }}"
       private_network: "{{ ekara_configuration_params.params.private_network }}"
       public_network: "{{ ekara_configuration_params.params.public_network | default('')}}"
-      availability_zone: "{{ ekara_configuration_params.params.availability_zone | default('') }}"
       dns_zone: "{{ekara_configuration_params.params.dns_zone | default('')}}"
       volumes: "{{ekara_configuration_params.volumes | default({}) | to_json }}"
       volumes_count: "{{ekara_configuration_params.volumes | default({}) | length }}"

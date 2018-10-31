@@ -19,10 +19,6 @@ parameters:
   flavor:
     type: string
     description: Flavor to use for server
-  availability_zone:
-    type: string
-    description: Availability zone for server
-    default: nova
   private_network:
     type: string
     label: Private network name or ID

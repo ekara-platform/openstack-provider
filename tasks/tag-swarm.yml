@@ -1,12 +1,4 @@
-#- hosts: localhost
-#  gather_facts: false
-#  pre_tasks:
-#  - name: Load configuration
-#    include_role:
-#      name: ekara.configuration
-#  tasks:
-#- set_fact:
-#    ekara_plf: "{{ekara_configuration_params.environment.name}}_{{ekara_configuration_params.environment.qualifier}}"
+---
 - name: Gather instances
   os_server_facts:
 - name: Filter nodes

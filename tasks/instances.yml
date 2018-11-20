@@ -2,10 +2,10 @@
 - name: Set Stack name
   set_fact:
     ekara_stack_meta:
-      Stack_name: "{{ekara_stack_name}}"
-      Stack_id: "{{ekara_configuration_params.environment.id}}"
-      Stack_qualifier: "{{ekara_configuration_params.environment.qualifier}}"
-      Stack_nodeset: "{{ekara_configuration_params.environment.nodeset}}"
+      ek.stack_name: "{{ekara_stack_name}}"
+      ek.stack_id: "{{ekara_configuration_params.environment.id}}"
+      ek.stack_qualifier: "{{ekara_configuration_params.environment.qualifier}}"
+      ek.stack_nodeset: "{{ekara_configuration_params.environment.nodeset}}"
 - name: Add metadata
   set_fact:
     ekara_os_metadata: "{{ ekara_configuration_params.params.metadata | default({})| combine(ekara_stack_meta) }}"

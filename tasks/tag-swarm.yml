@@ -6,9 +6,9 @@
     ekara_instances_plf: "{{ (ekara_instances_plf|default([])) + [ item ] }}"
   with_items: "{{openstack_servers}}"
   when:
-  - item.metadata.Stack_id is defined
-  - item.metadata.Stack_name == ekara_configuration_params.environment.name
-  - item.metadata.Stack_qualifier == ekara_configuration_params.environment.qualifier
+  - item.metadata['ek.stack_id'] is defined
+  - item.metadata['ek.stack_name'] == ekara_configuration_params.environment.name
+  - item.metadata['ek.stack_qualifier'] == ekara_configuration_params.environment.qualifier
   loop_control:
     label: "{{ item.name }}"
 - set_fact:
@@ -19,8 +19,8 @@
     ekara_instances_managers: "{{ (ekara_instances_managers|default([])) + [ item ] }}"
   with_items: "{{openstack_servers}}"
   when:
-  - item.metadata.Swarm_type is defined
-  - item.metadata.Swarm_type == (ekara_plf+'_manager')
+  - item.metadata['ek.swarm_type'] is defined
+  - item.metadata['ek.swarm_type'] == (ekara_plf+'_manager')
   loop_control:
     label: "{{ item.name }}"
 - set_fact:
@@ -42,12 +42,12 @@
     state: present
     name: "{{item.id}}"
     meta:
-      Swarm_type: "{{ekara_plf}}_{{swarm_type}}"
+      ek.swarm_type: "{{ekara_plf}}_{{swarm_type}}"
   vars:
     swarm_type: "{% if index_manager < ekara_manager_tocreate|int %}manager{%else%}worker{%endif%}"
   loop: "{{ekara_instances_plf}}"
   loop_control:
     index_var: index_manager
-    label: "{{item.id}} - {{item.metadata.Swarm_type|default(swarm_type)}}"
+    label: "{{item.id}} - {{item.metadata['ek.swarm_type']|default(swarm_type)}}"
   when:
-  - item.metadata.Swarm_type is not defined
+  - item.metadata['ek.swarm_type'] is not defined

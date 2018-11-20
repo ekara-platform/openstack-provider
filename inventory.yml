@@ -25,9 +25,9 @@
       ekara_instances: "{{ ekara_instances + [ item ] }}"
     with_items: "{{openstack_servers}}"
     when:
-    - item.metadata.Stack_id is defined
-    - item.metadata.Stack_name == ekara_configuration_params.environment.name
-    - item.metadata.Stack_qualifier == ekara_configuration_params.environment.qualifier
+    - item.metadata['ek.stack_id'] is defined
+    - item.metadata['ek.stack_name'] == ekara_configuration_params.environment.name
+    - item.metadata['ek.stack_qualifier'] == ekara_configuration_params.environment.qualifier
     loop_control:
       label: "{{ item.name }}"
   - name: Gather Worker hosts
@@ -35,8 +35,8 @@
       ekara_workers: "{{ ekara_workers + [ item ] }}"
     with_items: "{{ekara_instances}}"
     when:
-    - item.metadata.Swarm_type is defined
-    - item.metadata.Swarm_type == (ekara_plf+'_worker')
+    - item.metadata['ek.swarm_type'] is defined
+    - item.metadata['ek.swarm_type'] == (ekara_plf+'_worker')
     loop_control:
       label: "{{ item.name }}"
 

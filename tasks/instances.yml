@@ -6,9 +6,14 @@
       ek.stack_id: "{{ekara_configuration_params.environment.id}}"
       ek.stack_qualifier: "{{ekara_configuration_params.environment.qualifier}}"
       ek.stack_nodeset: "{{ekara_configuration_params.environment.nodeset}}"
-- name: Add metadata
+- name: Prepare metadata
   set_fact:
     ekara_os_metadata: "{{ ekara_configuration_params.params.metadata | default({})| combine(ekara_stack_meta) }}"
+- name: Add labels into metadata
+  set_fact:
+    ekara_os_metadata: "{{ ekara_os_metadata | combine(ekara_configuration_params.labels) }}"
+  when:
+  - ekara_configuration_params.labels is defined
 
 - name: Define default machines names
   set_fact:
